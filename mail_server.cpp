@@ -9,7 +9,19 @@
 
 using namespace std;
 
+void _send(int socketFd){
+    string s;
+    while(true){
+        getline(cin, s, '\n');
+        send(socketFd, s.c_str(), s.length(), 0);
+    }
+    
+}
+
 int main(){
+
+    // reply will be sent from mail thread
+
     string read, write;
 
     sockaddr_in address;
@@ -28,6 +40,6 @@ int main(){
     // accepts a connection FROM SERVER
     newSerFd = accept(serFd, (sockaddr *)&address, (socklen_t *)(sizeof(address)));
 
-    
+        
 
 }
