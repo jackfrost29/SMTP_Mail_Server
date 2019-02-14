@@ -1,31 +1,42 @@
-#include<iostream>
-#include <unistd.h> 
-#include <stdio.h> 
-#include <sys/socket.h> 
-#include <stdlib.h> 
-#include <netinet/in.h> 
-#include <string.h>
-#include <arpa/inet.h>
-#define PORT 8080 
+#include <vector>
+#include <stdio.h>
+#include <string.h> //strlen
+#include <stdlib.h>
+#include <errno.h>
+#include <unistd.h> //close
+#include <arpa/inet.h> //close
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <cstdlib>
+#include <netinet/in.h>
+#include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
+#include <iostream>
 
 using namespace std;
 
-int main(){
-    int sockFd;
-    sockaddr_in address;
-    address.sin_family = AF_INET;
-    address.sin_port = htons(PORT);
 
-    sockFd = socket(AF_INET, SOCK_STREAM, 0);
-    inet_pton(AF_INET, "127.0.0.1", &address.sin_addr);
+int main(int argc, char const *argv[]){
+    sockaddr_in address, servAddress;
+    int client, PORT;
+    char buffer[1024];
+    cout << "Type the server port number: ";
+    cin >> PORT;
 
-    if(connect(sockFd, (sockaddr *)&address, sizeof(address) < 0) ){
-        printf("\nConnection Failed \n"); 
-        return -1;
-    }
+    client = socket(AF_INET, SOCK_STREAM, 0);
+    servAddress.sin_family = AF_INET;
+    servAddress.sin_port = htons(PORT);
 
-    // next step: chat system
+    inet_pton(AF_INET, "127.0.0.1", &servAddress.sin_addr);
 
+    connect(client, (sockaddr*)&servAddress, sizeof(servAddress));
+    read(client, buffer, 1024);
+    printf("From server: %s\n", buffer);
 
+    // hello
+    // mail_from
+    // rcpt_to
+    // data
+    // quit
 
+    close(client);
 }
